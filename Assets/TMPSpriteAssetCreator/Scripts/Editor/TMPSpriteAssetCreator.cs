@@ -7,11 +7,8 @@ namespace AillieoUtils.Editor
     using System.Collections.Generic;
     using TMPro;
     using System;
-    using System.Linq;
-    using TMPro.SpriteAssetUtilities;
     using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
     using System.IO;
-    using TMPro.EditorUtilities;
 
     public class TMPSpriteAssetCreator : EditorWindow
     {
@@ -39,18 +36,19 @@ namespace AillieoUtils.Editor
                 CreateAtlas(sprites);
             }
 
-            if (GUILayout.Button("Create Json"))
+            if (GUILayout.Button("Create Texture & Json"))
             {
                 var sprites = FindSprites(folder);
                 var atlas = CreateAtlas(sprites);
-                CreateJson(atlas);
+                CreateTextureAndJson(atlas, out var _, out var _);
             }
 
             if (GUILayout.Button("Create TMP Asset"))
             {
                 var sprites = FindSprites(folder);
                 var atlas = CreateAtlas(sprites);
-                CreateSpriteAsset(atlas);
+                CreateTextureAndJson(atlas, out Texture2D texture, out string json);
+                CreateSpriteAsset(texture, json);
             }
         }
 
@@ -91,7 +89,7 @@ namespace AillieoUtils.Editor
             {
                 if (sprite != null)
                 {
-                    atlas.Add(new[] { sprite });
+                    atlas.Add(new Sprite[] { sprite });
                 }
             }
 
@@ -102,8 +100,15 @@ namespace AillieoUtils.Editor
             return atlas;
         }
 
-        public static string CreateJson(SpriteAtlas atlas)
+        public static void CreateTextureAndJson(SpriteAtlas atlas, out Texture2D texture, out string json)
         {
+            // texture
+            texture = atlas.GetAtlasTexture();
+            texture = texture.GetReadableCopy();
+            var bytes = texture.EncodeToPNG();
+            File.WriteAllBytes(Application.dataPath + "/NewSpriteAtlas.png", bytes);
+
+            // json
             SpriteDataObject jsonData = new SpriteDataObject();
             jsonData.frames = new List<Frame>();
 
@@ -111,42 +116,55 @@ namespace AillieoUtils.Editor
             {
                 var spriteFrame = new SpriteFrame()
                 {
-                    x = sprite.rect.x,
-                    y = sprite.rect.y,
+                    x = sprite.rect.min.x,
+                    y = sprite.rect.min.y,
                     w = sprite.rect.width,
                     h = sprite.rect.height
+                };
+
+                var spriteSize = new SpriteSize()
+                {
+                    w = sprite.texture.width,
+                    h = sprite.texture.height,
                 };
 
                 var frame = new Frame() {
                     filename = sprite.name,
                     frame = spriteFrame,
+
+                    spriteSourceSize = spriteFrame,
+                    sourceSize = spriteSize,
+
+                    pivot = sprite.pivot,
                 };
 
                 jsonData.frames.Add(frame);
             }
 
-            string json = JsonUtility.ToJson(jsonData, true);
+            json = JsonUtility.ToJson(jsonData, true);
             var path = Path.Combine(Application.dataPath, "NewSpriteAtlas.json");
             File.WriteAllText(path, json);
-            return json;
+
+            AssetDatabase.Refresh();
         }
 
-        static void CreateSpriteAsset(SpriteAtlas atlas)
+        public static void CreateSpriteAsset(Texture2D texture, string json)
         {
-            SpriteDataObject jsonData = null;
+            SpriteDataObject jsonData = JsonUtility.FromJson<SpriteDataObject>(json);
 
-            string tmpSpriteAssetPath = "Assets/TMPSpriteAsset.asset";
+            string tmpSpriteAssetPath = "Assets/NewSpriteAtlas.asset";
             TMP_SpriteAsset tmpSpriteAsset = TMP_SpriteAsset.CreateInstance<TMP_SpriteAsset>();
             AssetDatabase.CreateAsset(tmpSpriteAsset, tmpSpriteAssetPath);
 
-            tmpSpriteAsset.spriteSheet = atlas.GetAtlasTexture();
+            tmpSpriteAsset.spriteSheet = texture;
 
             List<TMP_SpriteGlyph> spriteGlyphTable = new List<TMP_SpriteGlyph>();
             List<TMP_SpriteCharacter> spriteCharacterTable = new List<TMP_SpriteCharacter>();
 
-            // TMP_SpriteAssetMenu.PopulateSpriteTables(jsonData, ref spriteCharacterTable, ref spriteGlyphTable);
-            // tmpSpriteAsset.spriteCharacterTable = spriteCharacterTable;
-            // tmpSpriteAsset.spriteGlyphTable = spriteGlyphTable;
+            ReflectionMethods.TMP_SpriteAssetImporter_PopulateSpriteTables(jsonData, spriteCharacterTable, spriteGlyphTable);
+
+            ReflectionMethods.TMP_SpriteAsset_set_spriteCharacterTable(tmpSpriteAsset, spriteCharacterTable);
+            ReflectionMethods.TMP_SpriteAsset_set_spriteGlyphTable(tmpSpriteAsset, spriteGlyphTable);
 
             EditorUtility.SetDirty(tmpSpriteAsset);
             AssetDatabase.SaveAssets();

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using UnityEditor;
 using UnityEditor.U2D;
 using UnityEngine;
@@ -11,8 +10,8 @@ namespace AillieoUtils.Editor
     {
         public static Texture2D GetAtlasTexture(this SpriteAtlas atlas)
         {
-            // todo
-            return atlas.GetSprites()[0].texture;
+            SpriteAtlasUtility.PackAtlases(new SpriteAtlas[] { atlas }, EditorUserBuildSettings.activeBuildTarget);
+            return ReflectionMethods.SpriteAtlasExtensions_GetPreviewTextures(atlas)[0];
         }
 
         public static Sprite[] GetSprites(this SpriteAtlas atlas)
