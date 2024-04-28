@@ -1,14 +1,18 @@
+// -----------------------------------------------------------------------
+// <copyright file="TMPSpriteAssetCreator.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace AillieoUtils.Editor
 {
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditor.U2D;
-    using UnityEngine.U2D;
-    using System.Collections.Generic;
-    using TMPro;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using TMPro;
+    using UnityEditor;
+    using UnityEngine;
     using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-    using System.IO;
 
     public class TMPSpriteAssetCreator : EditorWindow
     {
@@ -22,33 +26,11 @@ namespace AillieoUtils.Editor
 
         private void OnGUI()
         {
-            folder = EditorGUILayout.ObjectField("", folder, typeof(DefaultAsset), false) as DefaultAsset;
+            this.folder = EditorGUILayout.ObjectField("folder", this.folder, typeof(DefaultAsset), false) as DefaultAsset;
 
-            if (GUILayout.Button("Find Sprites"))
+            if (GUILayout.Button("Create"))
             {
-                var sprites = FindSprites(folder);
-                Debug.Log($"Found {sprites.Length} sprites.");
-            }
-
-            if (GUILayout.Button("Create Atlas"))
-            {
-                var sprites = FindSprites(folder);
-                CreateAtlas(sprites);
-            }
-
-            if (GUILayout.Button("Create Texture & Json"))
-            {
-                var sprites = FindSprites(folder);
-                var atlas = CreateAtlas(sprites);
-                CreateTextureAndJson(atlas, out var _, out var _);
-            }
-
-            if (GUILayout.Button("Create TMP Asset"))
-            {
-                var sprites = FindSprites(folder);
-                var atlas = CreateAtlas(sprites);
-                CreateTextureAndJson(atlas, out Texture2D texture, out string json);
-                CreateSpriteAsset(texture, json);
+                Create(this.folder, 512);
             }
         }
 
@@ -60,7 +42,7 @@ namespace AillieoUtils.Editor
                 return Array.Empty<Sprite>();
             }
 
-            string folderPath = AssetDatabase.GetAssetPath(targetFolder);
+            var folderPath = AssetDatabase.GetAssetPath(targetFolder);
 
             if (!AssetDatabase.IsValidFolder(folderPath))
             {
@@ -68,12 +50,12 @@ namespace AillieoUtils.Editor
                 return Array.Empty<Sprite>();
             }
 
-            List<Sprite> list = new List<Sprite>();
+            var list = new List<Sprite>();
 
-            string[] fileEntries = AssetDatabase.FindAssets("t:Sprite", new[] { folderPath });
-            foreach (string guid in fileEntries)
+            var fileEntries = AssetDatabase.FindAssets("t:Sprite", new[] { folderPath });
+            foreach (var guid in fileEntries)
             {
-                string filePath = AssetDatabase.GUIDToAssetPath(guid);
+                var filePath = AssetDatabase.GUIDToAssetPath(guid);
                 var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(filePath);
                 list.Add(sprite);
             }
@@ -81,90 +63,109 @@ namespace AillieoUtils.Editor
             return list.ToArray();
         }
 
-        public static SpriteAtlas CreateAtlas(Sprite[] sprites)
-        {
-            SpriteAtlas atlas = new SpriteAtlas();
-
-            foreach (var sprite in sprites)
-            {
-                if (sprite != null)
-                {
-                    atlas.Add(new Sprite[] { sprite });
-                }
-            }
-
-            AssetDatabase.CreateAsset(atlas, "Assets/NewSpriteAtlas.spriteatlas");
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            return atlas;
-        }
-
-        public static void CreateTextureAndJson(SpriteAtlas atlas, out Texture2D texture, out string json)
+        public static void Create(DefaultAsset folder, int maximumAtlasSize, int padding = 2, TextureFormat textureFormat = TextureFormat.RGBA32)
         {
             // texture
-            texture = atlas.GetAtlasTexture();
-            texture = texture.GetReadableCopy();
-            var bytes = texture.EncodeToPNG();
-            File.WriteAllBytes(Application.dataPath + "/NewSpriteAtlas.png", bytes);
+            var sprites = FindSprites(folder);
+            var textures = sprites.Select(s => s.texture).Select(t => t.GetReadableCopy()).ToArray();
+            var packedTexture = new Texture2D(maximumAtlasSize, maximumAtlasSize, textureFormat, false);
+            var packInfo = packedTexture.PackTextures(textures, padding, maximumAtlasSize, false);
+
+            var assetPathNoExt = AssetDatabase.GetAssetPath(folder);
+            var texturePath = $"{assetPathNoExt}.png";
+
+            FileUtils.SaveTexture2D(packedTexture, texturePath);
+            AssetDatabase.Refresh();
+            Texture2D packedTextureInAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
 
             // json
-            SpriteDataObject jsonData = new SpriteDataObject();
+            var jsonData = new SpriteDataObject();
             jsonData.frames = new List<Frame>();
 
-            foreach (var sprite in atlas.GetSprites())
+            var count = textures.Length;
+
+            for (var i = 0; i < count; ++i)
             {
+                var texture = textures[i];
+                var rect = packInfo[i];
+
+                rect.y = 1 - rect.y;
+
+                rect.x *= maximumAtlasSize;
+                rect.y *= maximumAtlasSize;
+                rect.width *= maximumAtlasSize;
+                rect.height *= maximumAtlasSize;
+
                 var spriteFrame = new SpriteFrame()
                 {
-                    x = sprite.rect.min.x,
-                    y = sprite.rect.min.y,
-                    w = sprite.rect.width,
-                    h = sprite.rect.height
+                    x = rect.x,
+                    y = rect.y - rect.height,
+                    w = rect.width,
+                    h = rect.height,
                 };
 
                 var spriteSize = new SpriteSize()
                 {
-                    w = sprite.texture.width,
-                    h = sprite.texture.height,
+                    w = rect.width,
+                    h = rect.height,
                 };
 
-                var frame = new Frame() {
-                    filename = sprite.name,
+                var frame = new Frame()
+                {
+                    filename = texture.name,
                     frame = spriteFrame,
 
-                    spriteSourceSize = spriteFrame,
+                    spriteSourceSize = new SpriteFrame()
+                    {
+                        x = 0,
+                        y = 0,
+                        w = texture.width,
+                        h = texture.height,
+                    },
                     sourceSize = spriteSize,
 
-                    pivot = sprite.pivot,
+                    pivot = new Vector2(0f, 0f),
                 };
 
                 jsonData.frames.Add(frame);
             }
 
-            json = JsonUtility.ToJson(jsonData, true);
-            var path = Path.Combine(Application.dataPath, "NewSpriteAtlas.json");
-            File.WriteAllText(path, json);
+            var textureSize = new SpriteSize()
+            {
+                w = packedTextureInAsset.width,
+                h = packedTextureInAsset.height,
+            };
 
+            var meta = new Meta()
+            {
+                size = textureSize,
+                version = "1.0",
+                format = packedTextureInAsset.format.ToString(),
+            };
+
+            jsonData.meta = meta;
+
+            //
+            var json = JsonUtility.ToJson(jsonData, true);
+            var jsonPath = $"{assetPathNoExt}.json";
+            FileUtils.SaveTextAsset(json, jsonPath);
             AssetDatabase.Refresh();
-        }
 
-        public static void CreateSpriteAsset(Texture2D texture, string json)
-        {
-            SpriteDataObject jsonData = JsonUtility.FromJson<SpriteDataObject>(json);
-
-            string tmpSpriteAssetPath = "Assets/NewSpriteAtlas.asset";
-            TMP_SpriteAsset tmpSpriteAsset = TMP_SpriteAsset.CreateInstance<TMP_SpriteAsset>();
+            var tmpSpriteAssetPath = $"{assetPathNoExt}.asset";
+            var tmpSpriteAsset = TMP_SpriteAsset.CreateInstance<TMP_SpriteAsset>();
             AssetDatabase.CreateAsset(tmpSpriteAsset, tmpSpriteAssetPath);
 
-            tmpSpriteAsset.spriteSheet = texture;
+            tmpSpriteAsset.spriteSheet = packedTextureInAsset;
 
-            List<TMP_SpriteGlyph> spriteGlyphTable = new List<TMP_SpriteGlyph>();
-            List<TMP_SpriteCharacter> spriteCharacterTable = new List<TMP_SpriteCharacter>();
+            var spriteGlyphTable = new List<TMP_SpriteGlyph>();
+            var spriteCharacterTable = new List<TMP_SpriteCharacter>();
 
             ReflectionMethods.TMP_SpriteAssetImporter_PopulateSpriteTables(jsonData, spriteCharacterTable, spriteGlyphTable);
 
             ReflectionMethods.TMP_SpriteAsset_set_spriteCharacterTable(tmpSpriteAsset, spriteCharacterTable);
             ReflectionMethods.TMP_SpriteAsset_set_spriteGlyphTable(tmpSpriteAsset, spriteGlyphTable);
+
+            //packedTextureInAsset.Apply(false, true);
 
             EditorUtility.SetDirty(tmpSpriteAsset);
             AssetDatabase.SaveAssets();

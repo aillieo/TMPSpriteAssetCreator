@@ -1,20 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using TMPro;
-using TMPro.EditorUtilities;
-using TMPro.SpriteAssetUtilities;
-using UnityEngine;
-using UnityEngine.U2D;
+// -----------------------------------------------------------------------
+// <copyright file="ReflectionMethods.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.Editor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using TMPro;
+    using TMPro.SpriteAssetUtilities;
+    using UnityEngine;
+    using UnityEngine.U2D;
+
     internal static class ReflectionMethods
     {
-        public static Func<SpriteAtlas, Texture2D[]> SpriteAtlasExtensions_GetPreviewTextures;
-        public static Action<TexturePacker_JsonArray.SpriteDataObject, List<TMP_SpriteCharacter>, List<TMP_SpriteGlyph>> TMP_SpriteAssetImporter_PopulateSpriteTables;
-        public static Action<TMP_SpriteAsset, List<TMP_SpriteCharacter>> TMP_SpriteAsset_set_spriteCharacterTable;
-        public static Action<TMP_SpriteAsset, List<TMP_SpriteGlyph>> TMP_SpriteAsset_set_spriteGlyphTable;
+        public static readonly Func<SpriteAtlas, Texture2D[]> SpriteAtlasExtensions_GetPreviewTextures;
+        public static readonly Action<TexturePacker_JsonArray.SpriteDataObject, List<TMP_SpriteCharacter>, List<TMP_SpriteGlyph>> TMP_SpriteAssetImporter_PopulateSpriteTables;
+        public static readonly Action<TMP_SpriteAsset, List<TMP_SpriteCharacter>> TMP_SpriteAsset_set_spriteCharacterTable;
+        public static readonly Action<TMP_SpriteAsset, List<TMP_SpriteGlyph>> TMP_SpriteAsset_set_spriteGlyphTable;
 
         static ReflectionMethods()
         {
@@ -31,8 +36,8 @@ namespace AillieoUtils.Editor
             try
             {
                 var method = typeof(TMP_SpriteAssetImporter).GetMethod("PopulateSpriteTables", BindingFlags.Static | BindingFlags.NonPublic);
-                TMP_SpriteAssetImporter_PopulateSpriteTables = 
-                    Delegate.CreateDelegate(typeof(Action<TexturePacker_JsonArray.SpriteDataObject, List<TMP_SpriteCharacter>, List<TMP_SpriteGlyph>>), method)
+                TMP_SpriteAssetImporter_PopulateSpriteTables
+                    = Delegate.CreateDelegate(typeof(Action<TexturePacker_JsonArray.SpriteDataObject, List<TMP_SpriteCharacter>, List<TMP_SpriteGlyph>>), method)
                     as Action<TexturePacker_JsonArray.SpriteDataObject, List<TMP_SpriteCharacter>, List<TMP_SpriteGlyph>>;
             }
             catch (Exception e)

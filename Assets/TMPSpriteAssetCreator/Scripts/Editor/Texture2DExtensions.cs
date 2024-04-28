@@ -1,9 +1,15 @@
+// -----------------------------------------------------------------------
+// <copyright file="Texture2DExtensions.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace AillieoUtils.Editor
 {
     using System;
     using UnityEngine;
 
-    public static class Texture2DExtensions
+    internal static class Texture2DExtensions
     {
         public static Texture2D GetReadableCopy(this Texture2D texture)
         {
@@ -24,7 +30,7 @@ namespace AillieoUtils.Editor
 
                 Graphics.Blit(texture, tempRT);
 
-                Texture2D readableTexture = new Texture2D(
+                var readableTexture = new Texture2D(
                     texture.width,
                     texture.height,
                     TextureFormat.RGBA32,
