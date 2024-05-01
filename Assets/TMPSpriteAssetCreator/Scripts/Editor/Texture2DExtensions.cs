@@ -41,6 +41,8 @@ namespace AillieoUtils.Editor
                 readableTexture.ReadPixels(new Rect(0, 0, tempRT.width, tempRT.height), 0, 0);
                 readableTexture.Apply();
 
+                readableTexture.name = texture.name;
+
                 return readableTexture;
             }
             finally

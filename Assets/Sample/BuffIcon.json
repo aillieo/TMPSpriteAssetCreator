@@ -1,0 +1,441 @@
+{
+    "frames": [
+        {
+            "filename": "buff0000",
+            "frame": {
+                "x": 0.0,
+                "y": 416.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0001",
+            "frame": {
+                "x": 98.0,
+                "y": 416.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0002",
+            "frame": {
+                "x": 196.0,
+                "y": 416.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0003",
+            "frame": {
+                "x": 294.0,
+                "y": 416.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0004",
+            "frame": {
+                "x": 392.0,
+                "y": 416.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0005",
+            "frame": {
+                "x": 0.0,
+                "y": 318.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0006",
+            "frame": {
+                "x": 0.0,
+                "y": 220.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0007",
+            "frame": {
+                "x": 0.0,
+                "y": 122.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0008",
+            "frame": {
+                "x": 0.0,
+                "y": 24.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0009",
+            "frame": {
+                "x": 98.0,
+                "y": 318.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0010",
+            "frame": {
+                "x": 196.0,
+                "y": 318.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0011",
+            "frame": {
+                "x": 294.0,
+                "y": 318.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0012",
+            "frame": {
+                "x": 392.0,
+                "y": 318.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0013",
+            "frame": {
+                "x": 98.0,
+                "y": 220.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0014",
+            "frame": {
+                "x": 98.0,
+                "y": 122.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0015",
+            "frame": {
+                "x": 98.0,
+                "y": 24.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        },
+        {
+            "filename": "buff0016",
+            "frame": {
+                "x": 196.0,
+                "y": 220.0,
+                "w": 96.0,
+                "h": 96.0
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 128.0,
+                "h": 128.0
+            },
+            "sourceSize": {
+                "w": 96.0,
+                "h": 96.0
+            },
+            "pivot": {
+                "x": 0.0,
+                "y": 1.0
+            }
+        }
+    ],
+    "meta": {
+        "app": "AillieoUtils.Editor.TMPSpriteAssetCreator",
+        "version": "1.0",
+        "image": "AAA",
+        "format": "DXT5",
+        "size": {
+            "w": 512.0,
+            "h": 512.0
+        },
+        "scale": 1.0,
+        "smartupdate": ""
+    }
+}

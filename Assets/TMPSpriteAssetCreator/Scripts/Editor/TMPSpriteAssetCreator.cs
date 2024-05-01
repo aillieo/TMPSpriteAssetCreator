@@ -124,7 +124,7 @@ namespace AillieoUtils.Editor
                     },
                     sourceSize = spriteSize,
 
-                    pivot = new Vector2(0f, 0f),
+                    pivot = new Vector2(0f, 1f),
                 };
 
                 jsonData.frames.Add(frame);
@@ -138,9 +138,12 @@ namespace AillieoUtils.Editor
 
             var meta = new Meta()
             {
-                size = textureSize,
+                app = typeof(AillieoUtils.Editor.TMPSpriteAssetCreator).FullName,
                 version = "1.0",
+                image = $"{packedTextureInAsset.name}.png",
                 format = packedTextureInAsset.format.ToString(),
+                size = textureSize,
+                scale = 1.0f,
             };
 
             jsonData.meta = meta;
@@ -152,6 +155,14 @@ namespace AillieoUtils.Editor
             AssetDatabase.Refresh();
 
             var tmpSpriteAssetPath = $"{assetPathNoExt}.asset";
+            var oldAsset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(tmpSpriteAssetPath);
+
+            if (oldAsset != null && !EditorUtility.IsPersistent(oldAsset))
+            {
+                UnityEngine.Object.DestroyImmediate(oldAsset);
+                AssetDatabase.Refresh();
+            }
+
             var tmpSpriteAsset = TMP_SpriteAsset.CreateInstance<TMP_SpriteAsset>();
             AssetDatabase.CreateAsset(tmpSpriteAsset, tmpSpriteAssetPath);
 
@@ -165,9 +176,17 @@ namespace AillieoUtils.Editor
             ReflectionMethods.TMP_SpriteAsset_set_spriteCharacterTable(tmpSpriteAsset, spriteCharacterTable);
             ReflectionMethods.TMP_SpriteAsset_set_spriteGlyphTable(tmpSpriteAsset, spriteGlyphTable);
 
-            //packedTextureInAsset.Apply(false, true);
+            ReflectionMethods.TMP_SpriteAsset_set_version(tmpSpriteAsset, "1.1.0");
+
+            tmpSpriteAsset.hashCode = TMP_TextUtilities.GetSimpleHashCode(tmpSpriteAsset.name);
+
+            ReflectionMethods.TMP_SpriteAssetImporter_AddDefaultMaterial(tmpSpriteAsset);
 
             EditorUtility.SetDirty(tmpSpriteAsset);
+            AssetDatabase.SaveAssets();
+
+            //packedTextureInAsset.Apply(false, true);
+            EditorUtility.SetDirty(packedTextureInAsset);
             AssetDatabase.SaveAssets();
         }
     }
