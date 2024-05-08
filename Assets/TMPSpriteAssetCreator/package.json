@@ -1,0 +1,11 @@
+{
+    "name": "com.aillieo.tmp-sprite-asset-creator",
+    "displayName": "AillieoUtils TMP Sprite Asset Creator",
+    "description": "AillieoUtils TMP Sprite Asset Creator",
+    "version": "1.0.0",
+    "unity": "2020.3",
+    "license": "MIT",
+    "dependencies": {
+        "com.unity.textmeshpro": "3.0.6",
+    }
+}

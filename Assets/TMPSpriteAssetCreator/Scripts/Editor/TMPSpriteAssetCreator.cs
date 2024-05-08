@@ -16,22 +16,43 @@ namespace AillieoUtils.Editor
 
     public class TMPSpriteAssetCreator : EditorWindow
     {
+        private TMPSpriteAssetConfig dummyConfig;
+        private Editor editor;
+
         [MenuItem("AillieoUtils/SpriteAssetCreator")]
         private static void OpenWindow()
         {
             GetWindow<TMPSpriteAssetCreator>(nameof(TMPSpriteAssetCreator));
         }
 
-        private DefaultAsset folder;
+        private void OnDestroy()
+        {
+            if (this.editor != null)
+            {
+                DestroyImmediate(this.editor);
+                this.editor = null;
+            }
+
+            if (this.dummyConfig != null)
+            {
+                DestroyImmediate(this.dummyConfig);
+                this.dummyConfig = null;
+            }
+        }
 
         private void OnGUI()
         {
-            this.folder = EditorGUILayout.ObjectField("folder", this.folder, typeof(DefaultAsset), false) as DefaultAsset;
-
-            if (GUILayout.Button("Create"))
+            if (this.dummyConfig == null)
             {
-                Create(this.folder, 512);
+                this.dummyConfig = CreateInstance<TMPSpriteAssetConfig>();
             }
+
+            if (this.editor == null)
+            {
+                this.editor = Editor.CreateEditor(this.dummyConfig);
+            }
+
+            this.editor.OnInspectorGUI();
         }
 
         public static Sprite[] FindSprites(DefaultAsset targetFolder)
@@ -65,6 +86,11 @@ namespace AillieoUtils.Editor
 
         public static void Create(DefaultAsset folder, int maximumAtlasSize, int padding = 2, TextureFormat textureFormat = TextureFormat.RGBA32)
         {
+            if (folder == null)
+            {
+                throw new ArgumentException("Folder not assigned", nameof(folder));
+            }
+
             // texture
             var sprites = FindSprites(folder);
             var textures = sprites.Select(s => s.texture).Select(t => t.GetReadableCopy()).ToArray();
