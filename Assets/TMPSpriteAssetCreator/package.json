@@ -6,6 +6,6 @@
     "unity": "2020.3",
     "license": "MIT",
     "dependencies": {
-        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.textmeshpro": "3.0.6"
     }
 }
